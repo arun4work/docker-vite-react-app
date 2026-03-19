@@ -26,7 +26,7 @@ jobs:
         run: npx tsc --noEmit
 
       - name: Run Unit Tests
-        run: npm run test:run -- --reporter=github
+        run: npm run test:run -- --reporter=github-actions
 
   deploy:
     needs: test-and-verify
