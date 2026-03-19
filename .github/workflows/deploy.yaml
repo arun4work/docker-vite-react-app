@@ -32,13 +32,22 @@ jobs:
     needs: test-and-verify
     runs-on: ubuntu-latest
     steps:
-      - name: Install Koyeb CLI
-        run: |
-          curl https://app.koyeb.com/install.sh | sh
-          echo "${HOME}/.koyeb/bin" >> $GITHUB_PATH 
-          # Note: The install script path can vary, check logs if 'koyeb' isn't found.
+      - uses: actions/checkout@v6
+
+      - name: Install and configure Koyeb CLI
+        uses: koyeb-community/koyeb-actions@v2
+        with:
+          api_token: ${{ secrets.KOYEB_GITHUB_TOKEN }}
 
       - name: Trigger Koyeb Redeploy
         run: koyeb service redeploy circular-ardys/docker-vite-react-app
-        env:
-          KOYEB_TOKEN: ${{ secrets.KOYEB_GITHUB_TOKEN }}
+      # - name: Install Koyeb CLI
+      #   run: |
+      #     curl https://app.koyeb.com/install.sh | sh
+      #     echo "${HOME}/.koyeb/bin" >> $GITHUB_PATH 
+      #     # Note: The install script path can vary, check logs if 'koyeb' isn't found.
+
+      # - name: Trigger Koyeb Redeploy
+      #   run: koyeb service redeploy circular-ardys/docker-vite-react-app
+      #   env:
+      #     KOYEB_TOKEN: ${{ secrets.KOYEB_GITHUB_TOKEN }}
