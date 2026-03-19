@@ -20,7 +20,7 @@ function App() {
       <div className="card">
         <button role='count-button' onClick={() => setCount((count) => count + 1)}>count is {count}</button>
         <p>
-         Learning Docker to build app and deploy into nginx.
+         This change is from feature branch.
         </p>
       </div>
       <p>This app is running inside Docker container with Docker volume, <br/>
