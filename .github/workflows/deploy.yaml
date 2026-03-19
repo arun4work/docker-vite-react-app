@@ -3,16 +3,20 @@ on:
   push:
     branches: [master]
 
+# This sets the flag globally for the whole workflow to use Node 24
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   test-and-verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22 # Using 22 for stability, or 24 if you're on the bleeding edge
+          node-version: 24
           cache: 'npm'
 
       - name: Install dependencies
