@@ -2,6 +2,8 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [master]
+  pull_request:
+    branches: [master] # Runs when a PR is opened targeting master and catches error if any
 
 # This sets the flag globally for the whole workflow to use Node 24
 env:
@@ -27,8 +29,17 @@ jobs:
 
       - name: Run Unit Tests
         run: npm run test:run -- --reporter=github-actions
+      
+      # NEW STEP: The Production Build Check
+      - name: Build Application
+        run: npm run build
+        env:
+          # Ensure any required build-time env vars are present here
+          NODE_ENV: production
 
   deploy:
+    # Only deploy if it's a direct push/merge to master
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: test-and-verify
     runs-on: ubuntu-latest
     steps:
