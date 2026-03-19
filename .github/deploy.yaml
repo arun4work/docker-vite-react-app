@@ -1,0 +1,40 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches: [master]
+
+jobs:
+  test-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22 # Using 22 for stability, or 24 if you're on the bleeding edge
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type Check
+        run: npx tsc --noEmit
+
+      - name: Run Unit Tests
+        run: npm run test:run -- --reporter=github
+
+  deploy:
+    needs: test-and-verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Koyeb CLI
+        run: |
+          curl https://app.koyeb.com/install.sh | sh
+          echo "${HOME}/.koyeb/bin" >> $GITHUB_PATH 
+          # Note: The install script path can vary, check logs if 'koyeb' isn't found.
+
+      - name: Trigger Koyeb Redeploy
+        run: koyeb service redeploy circular-ardys/docker-vite-react-app
+        env:
+          KOYEB_TOKEN: ${{ secrets.KOYEB_GITHUB_TOKEN }}
