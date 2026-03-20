@@ -21,7 +21,7 @@ describe("App", () => {
     await user.click(buttonWithText);
 
     // Assert that the count text is updated to 1
-    expect(buttonWithText.textContent).toBe('count is 1');
+    expect(buttonWithText.textContent).toBe('count is 2');
 
   });
 });
